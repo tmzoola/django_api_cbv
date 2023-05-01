@@ -1,21 +1,24 @@
 from django.shortcuts import render,HttpResponse
 from .models import Student
 from .serializers import StudentSerializers
-from rest_framework.response import Response
-from rest_framework import status
-from rest_framework.views import APIView
-from django.http import Http404
+# from rest_framework.response import Response
+# from rest_framework import status
+# from rest_framework.views import APIView
+# from django.http import Http404
 
 from rest_framework import generics,mixins,viewsets
-from rest_framework.pagination import PageNumberPagination
+from rest_framework.pagination import PageNumberPagination,LimitOffsetPagination
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import filters
 
-class StudentPagination(PageNumberPagination):
-    page_size=2
 
 class StudentViewSet(viewsets.ModelViewSet):
     queryset = Student.objects.all()
     serializer_class = StudentSerializers
-    pagination_class = StudentPagination
+    pagination_class = LimitOffsetPagination
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['id','name']
+
 
 # class StudentList(generics.ListCreateAPIView):
 #     queryset = Student.objects.all()
